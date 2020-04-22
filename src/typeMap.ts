@@ -66,6 +66,7 @@ export const jsonSchemaTypeToGraphQL = <IsInputType extends boolean>(
   required: boolean,
 ): IsInputType extends true ? GraphQLInputType : GraphQLOutputType => {
   const baseType = ((): GraphQLType => {
+
     if (isBodyType(jsonSchema)) {
       return jsonSchemaTypeToGraphQL(
         title,
@@ -192,6 +193,28 @@ export const createGraphQLType = (
     };
   } else if (!jsonSchema.title) {
     jsonSchema = { ...jsonSchema, title };
+  }
+
+  if (jsonSchema.allOf) {
+    let result: JSONSchemaType = {
+        type: 'object',
+        required: [],
+        properties: {}
+    }
+
+    // Merge object type properties
+    jsonSchema.allOf.map(item => {
+        if (isObjectType(item) && item.properties) {
+            isObjectType(result) ? result.properties = {
+                ...result.properties,
+                ...item.properties
+            } : undefined
+        } else {
+          throw new Error(`Unsupported allOf case ${item}`)
+        }
+    });
+
+    return createGraphQLType(result, title, isInputType, gqlTypes);
   }
 
   if (isArrayType(jsonSchema)) {

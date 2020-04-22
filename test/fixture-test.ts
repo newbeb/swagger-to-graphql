@@ -41,4 +41,21 @@ describe('Fixture', () => {
       expect(graphschema).to.equal(expected);
     });
   });
+
+  describe('OpenAPI3 - allOf, someOf, oneOf', () => {
+    const swaggerSchema = `test/fixtures/handle-allOf.yaml`;
+    const graphqlFile = `test/fixtures/handle-allOf.graphql`;
+    it(`handles allOf - should convert to ${graphqlFile}`, async () => {
+      const schema = await graphQLSchema({
+        swaggerSchema,
+        callBackend() {
+          return new Promise(() => {});
+        },
+      });
+      const graphschema = graphql.printSchema(schema);
+      const expected = fs.readFileSync(graphqlFile, 'utf8');
+      expect(graphschema).to.equal(expected);
+    });
+  });
+
 });

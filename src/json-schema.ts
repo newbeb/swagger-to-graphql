@@ -8,6 +8,7 @@ export interface RootGraphQLSchema {
 interface CommonSchema {
   description?: string;
   title?: string;
+  allOf?: JSONSchemaNoBody[];
 }
 
 export interface BodySchema extends CommonSchema {
@@ -59,7 +60,8 @@ export const isObjectType = (
 ): jsonSchema is ObjectSchema =>
   !isBodyType(jsonSchema) &&
   (Object.keys(jsonSchema).includes('properties') ||
-    jsonSchema.type === 'object');
+    jsonSchema.type === 'object' ||
+    jsonSchema.allOf !== undefined);
 
 export const isArrayType = (
   jsonSchema: JSONSchemaType,

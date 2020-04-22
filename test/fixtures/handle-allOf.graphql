@@ -1,0 +1,29 @@
+type Mutation {
+  allOfTest_put(body: param_allOfTest_put_bodyInput): TestBody1!
+}
+
+input param_allOfTest_put_bodyInput {
+  int1: String
+  string1: String
+  enum1: String
+  bool1: Boolean
+  int3: String
+  string3: String
+  enum3: String
+  bool3: Boolean
+}
+
+type Query {
+  allOfTest_get: [TestBody1!]!
+}
+
+type TestBody1 {
+  int1: String
+  string1: String
+  enum1: String
+  bool1: Boolean
+  int2: String
+  string2: String
+  enum2: String
+  bool2: Boolean
+}

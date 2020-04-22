@@ -1,0 +1,147 @@
+openapi: 3.0.0
+info:
+  description: "This is a test schema to test allOf functionality in Swagger"
+  version: 1.0.0
+  title: swagger-to-graphql OpenAPI allOf support
+tags:
+  - name: test
+    description: This is a test
+  - name: openapi
+    description: This supports OpenAPI v3
+paths:
+  /allOf:
+    get:
+      summary: Test that allOf works for schema resolution
+      operationId: allOfTest_get
+      responses:
+        "200":
+          description: Test Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  - $ref: "#/components/schemas/TestCombinedSchema"
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Pet not found
+    put:
+      summary: Put test
+      operationId: allOfTest_put
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/TestSchema1"
+                - $ref: "#/components/schemas/TestSchema3"
+      responses:
+        "200":
+          description: Test Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TestCombinedSchema"
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Pet not found
+
+servers:
+  - url: http://foo.bar/v3
+components:
+  parameters:
+    testParam1:
+      name: testParam1
+      in: path
+      description: A test string parameter
+      required: true
+      schema:
+        type: string
+    testParam2:
+      name: testParam2
+      in: path
+      description: A test integer parameter
+      required: true
+      schema:
+        type: integer
+        format: int64
+  requestBodies:
+    TestBody1:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/TestCombinedSchema"
+      description: List of user object
+      required: true
+    TestBody2:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              allOf:
+                - $ref: "#/components/schemas/TestSchema1"
+                - $ref: "#/components/schemas/TestSchema2"
+      description: List of user object
+      required: true
+  schemas:
+    TestSchema1:
+      type: object
+      properties:
+        int1:
+          type: integer
+          format: int64
+        string1:
+          type: string
+          format: date-time
+        enum1:
+          type: string
+          enum:
+            - aaaa
+            - bbbb
+            - cccc
+        bool1:
+          type: boolean
+          default: false
+    TestSchema2:
+      type: object
+      properties:
+        int2:
+          type: integer
+          format: int64
+        string2:
+          type: string
+          format: date-time
+        enum2:
+          type: string
+          enum:
+            - aaaa
+            - bbbb
+            - cccc
+        bool2:
+          type: boolean
+          default: false
+    TestSchema3:
+      type: object
+      properties:
+        int3:
+          type: integer
+          format: int64
+        string3:
+          type: string
+          format: date-time
+        enum3:
+          type: string
+          enum:
+            - aaaa
+            - bbbb
+            - cccc
+        bool3:
+          type: boolean
+          default: false
+    TestCombinedSchema:
+      allOf:
+        - $ref: "#/components/schemas/TestSchema1"
+        - $ref: "#/components/schemas/TestSchema2"
